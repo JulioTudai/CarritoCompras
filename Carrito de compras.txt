@@ -65,3 +65,32 @@ Objetivo : hacer una API rest full de carrito de compras donde pueda guardar dat
 
 
 servicio especial : El admin pueda definir en base al precio de costo qué porcentaje de ganancia quiere para determinadas marcas.
+
+
+package
+Persistence
+dentro los 2 package
+-implementation dentro claseDaoImp.java
+-interface dentro interfaceDao.java
+
+package
+Presentation
+dentro el package
+-Controller dentro clasesControllers.java
+
+
+package
+Service
+dentro los 2 package
+-implementation dentro claseServiceIMP.java
+-interface dentro interfaceService.java
+
+package
+Model
+dentro package los 3 package
+-Entity dentro clasesEntity.java
+-interface dentro interfaceDao.java
+-DTO dentro clasesDtos.java
+
+
+
