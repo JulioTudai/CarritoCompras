@@ -1,0 +1,67 @@
+Podes pedirle al chat que te genere casos de uso
+
+Usa lombok que te agiliza muchísimo y familiarízate con las notaciones
+
+@Entity: Es una anotación de JPA (javax.persistence). Marca una clase como una entidad que representa una tabla en la base de datos.
+Características:
+*La clase anotada con @Entity debe estar mapeada a una tabla en la base de datos.
+
+*Generalmente, tiene atributos que se mapean a las columnas de la tabla.
+
+*Debe incluir un campo que actúe como clave primaria, generalmente con la anotación @Id.
+
+Qué hace Spring o JPA con @Entity:
+
+*Utiliza esta clase para realizar operaciones de persistencia, como guardar, buscar,   actualizar o eliminar registros de la tabla asociada.
+*Mapea los atributos de la clase a las columnas de la tabla.
+
+@Repository: Es parte de Spring Framework (org.springframework.stereotype).  Indica que una clase es un componente de acceso a datos (DAO - Data Access Object).
+
+Características:
+
+*Gestiona las operaciones relacionadas con la base de datos (por ejemplo, consultas, guardado, eliminación).
+
+*Se utiliza junto con JPA para implementar interfaces que extienden JpaRepository o CrudRepository.
+
+*Spring detecta esta anotación durante el escaneo de componentes y registra el bean en el contexto de Spring.
+
+También busca el funcionamiento de mapStruct que te sirve para pasar de DTO a DAO y viceversa.
+
+Qué hace Spring con @Repository:
+
+*Identifica la clase como un componente de acceso a datos.
+*Maneja automáticamente excepciones relacionadas con la base de datos (por ejemplo, convierte SQLException en excepciones de Spring como DataAccessException).
+
+mapStructur :es una herramienta (framework) en Java que simplifica y automatiza la tarea de convertir (o mapear) un objeto de una clase a otro objeto de una clase diferente.
+
+1.Genera código automáticamente:
+
+Crea clases y métodos para realizar el mapeo entre objetos de forma automática, 
+evitando que escribas el código manualmente.
+
+Lo hace en tiempo de compilación, lo que significa que el código generado es rápido 
+y no tiene impacto en el rendimiento en tiempo de ejecución.
+
+2.Convierte objetos de una clase a otra:
+
+Es útil cuando tienes dos clases con estructuras similares, pero necesitas trasladar los datos entre ellas.
+
+3.Soporta transformaciones personalizadas:
+
+Permite configurar cómo deben mapearse atributos específicos, e incluso realizar conversiones más complejas si es necesario.
+
+Podes crear mappers para las entidades ej carritoMapper
+
+
+------------proyecto de carrito de compras----------------
+
+Objetivo : hacer una API rest full de carrito de compras donde pueda guardar datos de compras, clientes y proveedores en una base de datos postgresql.
+
+1.Usando spring boot framework.
+2.Usando Lombok para agilizar el codigo y que quede mas limpio.
+3.Tipo de modelo: Modelo en capas.
+4.usando DTO y DAO para recibir los datos y persistir.
+5.El controller tiene que retornar los mensajes http correspodientes a cada servicio.
+
+
+servicio especial : El admin pueda definir en base al precio de costo qué porcentaje de ganancia quiere para determinadas marcas.
