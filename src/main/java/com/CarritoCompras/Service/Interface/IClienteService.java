@@ -7,9 +7,13 @@ import java.util.List;
 
 public interface IClienteService {
 
-    List<ClienteDTO> finAll();
+    List<ClienteDTO> findAll();
 
     ClienteDTO findById(Long id);
 
     ClienteDTO saveCliente(ClienteDTO clienteDTO);
+
+    ClienteDTO updateCliente(Long id, ClienteDTO clienteDTO);
+
+    String deletCliente(Long id);
 }
