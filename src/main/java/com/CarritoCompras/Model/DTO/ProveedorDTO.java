@@ -1,20 +1,23 @@
 package com.CarritoCompras.Model.DTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
-@Getter
-@Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class ClienteDTO {
+@AllArgsConstructor
+public class ProveedorDTO {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
     private String name;
-    private String lastName;
     private String email;
-    private Long age;
+    private String phone;
+    private String companyName;
+    private List<String> products;
 
 
 }
