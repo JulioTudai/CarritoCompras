@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClienteDTO {
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
     private String name;

@@ -29,19 +29,19 @@ public class ClienteController {
     }
     @PostMapping("/create")
     public ResponseEntity<ClienteDTO> saveCliente(@RequestBody ClienteDTO clienteDTO){
-        System.out.println("ewqewqe");
+
         return new ResponseEntity<>(this.clienteService.saveCliente(clienteDTO),HttpStatus.CREATED);
     }
     @PutMapping("/update/{id}")
     public ResponseEntity<ClienteDTO> updateCliente(@PathVariable Long id,@RequestBody ClienteDTO clienteDTO){
-        System.out.println(id+"ewqewqe");
+
 
         return new ResponseEntity<>(this.clienteService.updateCliente(id, clienteDTO),HttpStatus.CREATED);
     }
 
     @DeleteMapping("/delet/{id}")
     public ResponseEntity<String> deletCliente(@PathVariable Long id){
-        System.out.println("llegue a controller con el id :" + id);
+
 
         return new ResponseEntity<>(clienteService.deletCliente(id),HttpStatus.NO_CONTENT);
     }

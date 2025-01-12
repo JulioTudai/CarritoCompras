@@ -42,7 +42,6 @@ public class ClienteServiceIMP implements IClienteService {
 
     @Override
     public ClienteDTO saveCliente(ClienteDTO clienteDTO) {
-        System.out.println(clienteDTO.getName());
 
         Optional<ClienteEntity> clienteBuscado = clienteRepository.findByName(clienteDTO.getName());
         if (clienteBuscado.isPresent()){
@@ -74,7 +73,6 @@ public class ClienteServiceIMP implements IClienteService {
     }
 
     public String deletCliente(Long id){
-        System.out.println("llegue a delet con el id :" + id);
         if(clienteRepository.existsById(id)){
             clienteRepository.deleteById(id);
             return "Cliente con ID " + id + " eliminado correctamente.";
