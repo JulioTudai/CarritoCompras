@@ -48,8 +48,11 @@ public class ProveedorServiceIMP implements IProveedorService {
             throw new IllegalArgumentException("El usuario con el nombre" + proveedorDTO.getName() + "Ya existe.");
         }
         try{
+            System.out.println("Dentro del try" + proveedorDTO.getName());
 
             ProveedorEntity proveedor = IMapperProveedor.INSTANCE.toEntity(proveedorDTO);
+
+            System.out.println("Dentro del try despues del mapeo" + proveedor.getName());
             return IMapperProveedor.INSTANCE.toDTO(proveedorRepository.save(proveedor));
 
         } catch (Exception e) {

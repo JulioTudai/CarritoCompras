@@ -42,6 +42,7 @@ public class ClienteServiceIMP implements IClienteService {
 
     @Override
     public ClienteDTO saveCliente(ClienteDTO clienteDTO) {
+        System.out.println(clienteDTO.getName()+"SERVICE en bien llega");
 
         Optional<ClienteEntity> clienteBuscado = clienteRepository.findByName(clienteDTO.getName());
         if (clienteBuscado.isPresent()){
@@ -50,6 +51,7 @@ public class ClienteServiceIMP implements IClienteService {
         try{
 
             ClienteEntity clienteEntity = IMapperCliente.INSTANCE.toEntity(clienteDTO);
+            System.out.println(clienteEntity.getName()+"mapeo a entity antes de ir a base de datos");
             return IMapperCliente.INSTANCE.toDTO(clienteRepository.save(clienteEntity));
 
         } catch (Exception e) {

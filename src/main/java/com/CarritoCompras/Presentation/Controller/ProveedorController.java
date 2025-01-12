@@ -29,6 +29,7 @@ public class ProveedorController {
 
     @PostMapping("/create")
     public ResponseEntity<ProveedorDTO> saveProveedor(@RequestBody ProveedorDTO proveedorDTO){
+        System.out.println("Nombre proveedor " + proveedorDTO.getName());
 
         return new ResponseEntity<>(this.proveedorService.saveProveedor(proveedorDTO), HttpStatus.CREATED);
     }

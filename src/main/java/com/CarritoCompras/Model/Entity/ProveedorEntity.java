@@ -35,6 +35,7 @@ public class ProveedorEntity {
     @Column(name = "producto")
     private List<String> products;
 
+
     public Long getId() {
         return id;
     }

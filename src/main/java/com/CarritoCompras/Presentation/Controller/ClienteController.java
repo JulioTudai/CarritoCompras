@@ -29,6 +29,7 @@ public class ClienteController {
     }
     @PostMapping("/create")
     public ResponseEntity<ClienteDTO> saveCliente(@RequestBody ClienteDTO clienteDTO){
+        System.out.println(clienteDTO.getName()+"CONTROLLER");
 
         return new ResponseEntity<>(this.clienteService.saveCliente(clienteDTO),HttpStatus.CREATED);
     }
