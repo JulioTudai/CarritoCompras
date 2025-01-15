@@ -30,11 +30,8 @@ public class ProveedorEntity {
     @Column
     private String companyName;
 
-    @ElementCollection
-    @CollectionTable(name = "proveedor_productos", joinColumns = @JoinColumn(name = "proveedor_id"))
-    @Column(name = "producto")
-    private List<String> products;
-
+    @OneToMany(mappedBy = "proveedor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductoEntity> products;
 
     public Long getId() {
         return id;
@@ -74,13 +71,5 @@ public class ProveedorEntity {
 
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
-    }
-
-    public List<String> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<String> products) {
-        this.products = products;
     }
 }

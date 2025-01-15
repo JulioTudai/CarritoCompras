@@ -2,6 +2,7 @@ package com.CarritoCompras.Service.Implementation;
 
 import com.CarritoCompras.Mapper.IMapperProveedor;
 import com.CarritoCompras.Model.DTO.ProveedorDTO;
+import com.CarritoCompras.Model.Entity.ProductoEntity;
 import com.CarritoCompras.Model.Entity.ProveedorEntity;
 import com.CarritoCompras.Repository.IProveedorRepository;
 import com.CarritoCompras.Service.Interface.IProveedorService;
@@ -39,30 +40,32 @@ public class ProveedorServiceIMP implements IProveedorService {
         return  new ProveedorDTO();
     }
 
-    public ProveedorDTO saveProveedor(ProveedorDTO proveedorDTO){
-
+    public ProveedorDTO saveProveedor(ProveedorDTO proveedorDTO) {
         Optional<ProveedorEntity> proveedorEntity = this.proveedorRepository.findByName(proveedorDTO.getName());
 
-        if (proveedorEntity.isPresent()){
-
-            throw new IllegalArgumentException("El usuario con el nombre" + proveedorDTO.getName() + "Ya existe.");
-        }
-        try{
-            System.out.println("Dentro del try" + proveedorDTO.getName());
-
-            ProveedorEntity proveedor = IMapperProveedor.INSTANCE.toEntity(proveedorDTO);
-
-            System.out.println("Dentro del try despues del mapeo" + proveedor.getName());
-            return IMapperProveedor.INSTANCE.toDTO(proveedorRepository.save(proveedor));
-
-        } catch (Exception e) {
-            throw new UnsupportedOperationException("Error al guardar el usuario");
+        if (proveedorEntity.isPresent()) {
+            throw new IllegalArgumentException("El proveedor con el nombre " + proveedorDTO.getName() + " ya existe.");
         }
 
+        ProveedorEntity proveedor = IMapperProveedor.INSTANCE.toEntity(proveedorDTO);
+
+        // Mapeamos los productos DTO a entidades
+        List<ProductoEntity> productos = proveedorDTO.getProducts().stream()
+                .map(productDTO -> ProductoEntity.builder()
+                        .name(productDTO.getName())
+                        .price(productDTO.getPrice())
+                        .description(productDTO.getDescription())
+                        .stock(productDTO.getStock())
+                        .proveedor(proveedor) // Asociar al proveedor
+                        .build())
+                .collect(Collectors.toList());
+        proveedor.setProducts(productos);
+
+        return IMapperProveedor.INSTANCE.toDTO(proveedorRepository.save(proveedor));
     }
 
-    public ProveedorDTO updateProveedor(Long id, ProveedorDTO proveedorDTO){
 
+    public ProveedorDTO updateProveedor(Long id, ProveedorDTO proveedorDTO){
 
         if ((!proveedorRepository.existsById(id))){
 
@@ -75,13 +78,18 @@ public class ProveedorServiceIMP implements IProveedorService {
         proveedor.setEmail(proveedorDTO.getEmail());
         proveedor.setPhone(proveedor.getPhone());
         proveedor.setCompanyName(proveedorDTO.getCompanyName());
-        if (proveedorDTO.getProducts() != null) {
 
-            List<String> validProducts = proveedorDTO.getProducts().stream()
-                    .filter(product -> product != null && !product.isEmpty()) // esto es para validación
-                    .distinct() // para evitar duplicados
+        if (proveedorDTO.getProducts() != null) {
+            List<ProductoEntity> productos = proveedorDTO.getProducts().stream()
+                    .map(productDTO -> ProductoEntity.builder()
+                            .name(productDTO.getName())
+                            .price(productDTO.getPrice())
+                            .description(productDTO.getDescription())
+                            .stock(productDTO.getStock())
+                            .proveedor(proveedor) // Asociar al proveedor
+                            .build())
                     .collect(Collectors.toList());
-            proveedor.setProducts(validProducts);
+            proveedor.setProducts(productos);
         }
 
         return IMapperProveedor.INSTANCE.toDTO(this.proveedorRepository.save(proveedor));

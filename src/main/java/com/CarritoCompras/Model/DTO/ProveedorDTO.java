@@ -1,5 +1,6 @@
 package com.CarritoCompras.Model.DTO;
 
+import com.CarritoCompras.Model.Entity.ProductoEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,7 +18,7 @@ public class ProveedorDTO {
     private String email;
     private String phone;
     private String companyName;
-    private List<String> products;
+    private List<ProductoEntity> products;
 
     public Long getId() {
         return id;
@@ -59,11 +60,11 @@ public class ProveedorDTO {
         this.companyName = companyName;
     }
 
-    public List<String> getProducts() {
+    public List<ProductoEntity> getProducts() {
         return products;
     }
 
-    public void setProducts(List<String> products) {
+    public void setProducts(List<ProductoEntity> products) {
         this.products = products;
     }
 }
