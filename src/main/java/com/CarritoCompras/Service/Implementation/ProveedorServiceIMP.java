@@ -79,7 +79,7 @@ public class ProveedorServiceIMP implements IProveedorService {
         proveedor.setPhone(proveedor.getPhone());
         proveedor.setCompanyName(proveedorDTO.getCompanyName());
 
-        if (proveedorDTO.getProducts() != null) {
+      /*  if (proveedorDTO.getProducts() != null) {
             List<ProductoEntity> productos = proveedorDTO.getProducts().stream()
                     .map(productDTO -> ProductoEntity.builder()
                             .name(productDTO.getName())
@@ -90,6 +90,24 @@ public class ProveedorServiceIMP implements IProveedorService {
                             .build())
                     .collect(Collectors.toList());
             proveedor.setProducts(productos);
+        }
+
+       */
+        if (proveedorDTO.getProducts() != null) {
+            // Limpia la lista existente sin perder la referencia
+            proveedor.getProducts().clear();
+
+            // Agrega los nuevos productos a la lista existente
+            proveedorDTO.getProducts().forEach(productDTO -> {
+                ProductoEntity producto = ProductoEntity.builder()
+                        .name(productDTO.getName())
+                        .price(productDTO.getPrice())
+                        .description(productDTO.getDescription())
+                        .stock(productDTO.getStock())
+                        .proveedor(proveedor) // Asociar al proveedor
+                        .build();
+                proveedor.getProducts().add(producto);
+            });
         }
 
         return IMapperProveedor.INSTANCE.toDTO(this.proveedorRepository.save(proveedor));

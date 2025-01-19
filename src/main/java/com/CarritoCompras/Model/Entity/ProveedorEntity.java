@@ -1,13 +1,14 @@
 package com.CarritoCompras.Model.Entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
 
 @Entity
-@Table(name="Proveedor")
+@Table(name="proveedor")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,12 +26,14 @@ public class ProveedorEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column
     private String phone;
 
     @Column
     private String companyName;
 
     @OneToMany(mappedBy = "proveedor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<ProductoEntity> products;
 
     public Long getId() {

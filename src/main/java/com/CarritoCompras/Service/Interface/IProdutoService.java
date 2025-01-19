@@ -1,19 +1,20 @@
 package com.CarritoCompras.Service.Interface;
 
 
-import com.CarritoCompras.Model.Entity.ProductoEntity;
+import com.CarritoCompras.Model.DTO.ProductoDTO;
+import com.CarritoCompras.Model.DTO.ProductoProveedorDTO;
 
 import java.util.List;
 
 public interface IProdutoService {
 
-    List<ProductoEntity> findAll();
+    List<ProductoDTO> findAll();
 
-    ProductoEntity findById(Long id);
+    ProductoProveedorDTO findById(Long id);
 
-    ProductoEntity saveProducto(ProductoEntity entity);
+    ProductoDTO saveProducto(ProductoDTO productoDTO);
 
-    ProductoEntity updateProducto(Long id, ProductoEntity entity);
+    ProductoDTO updateProducto(Long id, ProductoDTO productoDTO);
 
     String deletProducto(Long id);
 }

@@ -1,31 +1,22 @@
 package com.CarritoCompras.Model.DTO;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductoDTO {
+@Builder
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+public class ProductoProveedorDTO {
+
     private Long id;
     private String name;
     private Double price;
     private String description;
     private Integer stock;
-    private Long proveedorId;
-
-    public Long getProveedorId() {
-        return proveedorId;
-    }
-
-    public void setProveedorId(Long proveedorId) {
-        this.proveedorId = proveedorId;
-    }
+    private ProveedorDTO proveedor;
 
     public Long getId() {
         return id;
@@ -65,5 +56,13 @@ public class ProductoDTO {
 
     public void setStock(Integer stock) {
         this.stock = stock;
+    }
+
+    public ProveedorDTO getProveedor() {
+        return proveedor;
+    }
+
+    public void setProveedor(ProveedorDTO proveedor) {
+        this.proveedor = proveedor;
     }
 }
