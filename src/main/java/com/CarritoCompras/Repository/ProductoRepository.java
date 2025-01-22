@@ -5,10 +5,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ProductoRepository extends JpaRepository<ProductoEntity, Long>{
 
     @Query("SELECT p FROM ProductoEntity p JOIN FETCH p.proveedor WHERE p.id = :id")
     Optional<ProductoEntity> findByIdWithProveedor(@Param("id") Long id);
+
+    List<ProductoEntity> findByNameContainingIgnoreCase(String name);
 }

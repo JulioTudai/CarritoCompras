@@ -38,6 +38,15 @@ public class ProductoServiceIMP implements IProdutoService {
 
     }
 
+    public List<ProductoDTO> findByName(String name){
+
+        return this.productoRepository.findByNameContainingIgnoreCase(name).stream()
+                .map(IMapperProducto.INSTANCE::toDTO)
+                .collect(Collectors.toList());
+    }
+
+
+
     public ProductoDTO saveProducto(ProductoDTO productoDTO){
 
         ProveedorEntity proveedor = proveedorRepository.findById(productoDTO.getProveedorId())

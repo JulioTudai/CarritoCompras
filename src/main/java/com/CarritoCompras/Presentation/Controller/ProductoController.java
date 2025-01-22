@@ -30,6 +30,12 @@ public class ProductoController {
 
     }
 
+    @GetMapping("/buscar")
+    public ResponseEntity<List<ProductoDTO>> findByName(@RequestParam("name") String name){
+        return new ResponseEntity<>(this.produtoService.findByName(name),HttpStatus.OK);
+    }
+
+
     @PostMapping("/create")
     public ResponseEntity<ProductoDTO> saveProducto(@RequestBody ProductoDTO productoDTO){
 

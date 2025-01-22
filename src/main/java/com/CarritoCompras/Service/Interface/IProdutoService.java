@@ -17,4 +17,6 @@ public interface IProdutoService {
     ProductoDTO updateProducto(Long id, ProductoDTO productoDTO);
 
     String deletProducto(Long id);
+
+    List<ProductoDTO> findByName(String name);
 }

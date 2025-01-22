@@ -20,6 +20,8 @@ public class ClienteEntity {
     private String lastName;
     private String email;
     private long age;
+    @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private CarritoEntity carrito;
 
 
 }
