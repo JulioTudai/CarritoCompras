@@ -11,11 +11,11 @@ public class VentaDTO {
 
     private Long id;
     private LocalDateTime fechaHora;
-    private Long clienteId; // Solo se envía el ID del cliente para simplificar
-    private List<Long> productosVendidosIds; // Lista de IDs de productos vendidos
-    private Map<Long, Integer> cantidadPorProducto; // Map de ProductoID -> Cantidad
+    private Long clienteId;
+    private List<Long> productosVendidosIds;
+    private Map<Long, Integer> cantidadPorProducto;
     private Double total;
     private String medioDePago;
     private Double descuento;
-    private String estadoVenta; // Ejemplo: "Pendiente", "Confirmada", "Cancelada"
+    private String estadoVenta;
 }
