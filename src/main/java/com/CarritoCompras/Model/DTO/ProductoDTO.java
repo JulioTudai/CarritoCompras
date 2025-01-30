@@ -15,8 +15,8 @@ public class ProductoDTO {
     private Long id;
     private String name;
     private Double price;
-    private String description;
     private Integer stock;
+    private String description;
     private Long proveedorId;
 
     public Long getProveedorId() {

@@ -22,11 +22,12 @@ public class ProductoEntity {
     @Column(nullable = false)
     private Double price;
 
-    @Column
-    private String description;
 
     @Column(nullable = false)
     private Integer stock;
+
+    @Column
+    private String description;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
