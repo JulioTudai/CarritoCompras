@@ -23,12 +23,13 @@ public class MercadoController {
 
     // Registrar una compra
     @PostMapping("/{mercadoId}/compra")
-    public ResponseEntity<String> registrarCompra(@PathVariable Long mercadoId, @RequestBody Long ventaId) {
+    public ResponseEntity<String> registrarVenta(
+            @PathVariable Long mercadoId,
+            @RequestBody VentaDTO ventaDTO) {
+        mercadoService.registrarCompra(mercadoId, ventaDTO);
+        return ResponseEntity.ok("Venta registrada con éxito.");
 
-        mercadoService.registrarCompra(mercadoId,ventaId); //terminar venta
-        return ResponseEntity.ok("Compra registrada con éxito.");
     }
-
     // Consultar stock
     @GetMapping("/{mercadoId}/stock")
     public ResponseEntity<List<ProductoDTO>> consultarStock(@PathVariable Long mercadoId) {

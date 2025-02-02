@@ -13,14 +13,9 @@ public interface IMapperProducto {
     IMapperProducto INSTANCE = Mappers.getMapper(IMapperProducto.class);
 
 
-    @Mapping(target = "proveedor", ignore = true)
-    ProductoEntity toEntity(ProductoDTO dto);
+    ProductoBasicDTO toBasicDTO(ProductoEntity producto);
 
-    // Para findAll y save ID del proveedor
-    @Mapping(target = "proveedorId", source = "proveedor.id")
-    ProductoDTO toDTO(ProductoEntity entity);
+    ProductoDetailDTO toDetailDTO(ProductoEntity producto);
 
-    // Para findById proveedor completo
-    @Mapping(target = "proveedor", source = "proveedor")
-    ProductoProveedorDTO toProductoProvedorDTO(ProductoEntity entity);
+    ProductoEntity toEntity(ProductoDetailDTO dto);
 }
