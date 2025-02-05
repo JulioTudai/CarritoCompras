@@ -68,10 +68,9 @@ servicio especial : El admin pueda definir en base al precio de costo qué porce
 
 
 package
-Persistence
+Repository
 dentro los 2 package
--implementation dentro claseDaoImp.java
--interface dentro interfaceDao.java
+-interface dentro ICienteRepository.java
 
 package
 Presentation
@@ -87,9 +86,8 @@ dentro los 2 package
 
 package
 Model
-dentro package los 3 package
+dentro package los 2 package
 -Entity dentro clasesEntity.java
--interface dentro interfaceDao.java
 -DTO dentro clasesDtos.java
 
 

@@ -5,7 +5,6 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Entity
 @Table(name = "ventas")
@@ -17,138 +16,77 @@ import java.util.Map;
 public class VentaEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-generación del ID
     private Long id;
+
+    @Column(nullable = false) // No puede ser null
+    private Long carritoId;
 
     @Column(nullable = false)
     private LocalDateTime fechaHora;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cliente_id", nullable = false)
-    private ClienteEntity cliente;
-
-    @ManyToMany
-    @JoinTable(
-            name = "venta_productos",
-            joinColumns = @JoinColumn(name = "venta_id"),
-            inverseJoinColumns = @JoinColumn(name = "producto_id")
-    )
-    private List<ProductoEntity> productosVendidos;
-
-    @ElementCollection
-    @CollectionTable(name = "venta_cantidad_productos", joinColumns = @JoinColumn(name = "venta_id"))
-    @MapKeyJoinColumn(name = "producto_id")
-    @Column(name = "cantidad")
-    private Map<ProductoEntity, Integer> cantidadPorProducto;
+    @Column(nullable = false)
+    private Long clienteId;
 
     @Column(nullable = false)
     private Double total;
 
     @Column(nullable = false)
-    private String medioDePago;
-
-    @Column
     private Double descuento;
 
-    @Column(nullable = false)
-    private String estado;
+    // Relación de la venta con productos y sus cantidades
+    @ElementCollection
+    @CollectionTable(
+            name = "productos_vendidos",
+            joinColumns = @JoinColumn(name = "venta_id") // Clave foránea hacia `VentaEntity`
+    )
+    @Column(name = "cantidad") // Define la columna que almacena la cantidad
+    private List<ProductoCantidad> productosVendidos;
 
-    public void calcularTotal() {
-        double totalCalculado = cantidadPorProducto.entrySet().stream()
-                .mapToDouble(entry -> entry.getKey().getPrice() * entry.getValue())
-                .sum();
-
-        if (descuento != null && descuento > 0) {
-            totalCalculado -= totalCalculado * (descuento / 100);
+    /**
+     * Calcula el total de la venta sumando los precios de los productos.
+     * @param preciosProductos Lista de precios por producto en el orden correspondiente.
+     */
+    public void calcularTotal(List<Double> preciosProductos) {
+        if (productosVendidos == null || productosVendidos.isEmpty()) {
+            this.total = 0.0;
+            return;
         }
 
-        this.total = totalCalculado;
+        double sumaTotal = 0.0;
+        for (int i = 0; i < productosVendidos.size(); i++) {
+            ProductoCantidad pc = productosVendidos.get(i);
+            Double precio = preciosProductos.get(i);
+            sumaTotal += pc.getCantidad() * precio;
+        }
+        this.total = sumaTotal;
     }
 
-    public boolean verificarStock() {
-        return cantidadPorProducto.entrySet().stream()
-                .allMatch(entry -> entry.getKey().getStock() >= entry.getValue());
+    /**
+     * Aplica un descuento sobre el total actual.
+     * @param porcentajeDescuento Porcentaje del descuento a aplicar.
+     */
+    public void aplicarDescuento(double porcentajeDescuento) {
+        if (total != null && total > 0 && porcentajeDescuento > 0) {
+            this.descuento = total * (porcentajeDescuento / 100);
+            this.total -= this.descuento;
+        } else {
+            this.descuento = 0.0;
+        }
     }
 
-    public void asociarCliente(ClienteEntity cliente) {
-        this.cliente = cliente;
-    }
-
-    public void registrarProductos(Map<ProductoEntity, Integer> productosConCantidad) {
-        this.cantidadPorProducto = productosConCantidad;
-        this.productosVendidos = productosConCantidad.keySet().stream().toList();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public LocalDateTime getFechaHora() {
-        return fechaHora;
-    }
-
-    public void setFechaHora(LocalDateTime fechaHora) {
-        this.fechaHora = fechaHora;
-    }
-
-    public ClienteEntity getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(ClienteEntity cliente) {
-        this.cliente = cliente;
-    }
-
-    public List<ProductoEntity> getProductosVendidos() {
-        return productosVendidos;
-    }
-
-    public void setProductosVendidos(List<ProductoEntity> productosVendidos) {
-        this.productosVendidos = productosVendidos;
-    }
-
-    public Map<ProductoEntity, Integer> getCantidadPorProducto() {
-        return cantidadPorProducto;
-    }
-
-    public void setCantidadPorProducto(Map<ProductoEntity, Integer> cantidadPorProducto) {
-        this.cantidadPorProducto = cantidadPorProducto;
-    }
-
-    public Double getTotal() {
-        return total;
-    }
-
-    public void setTotal(Double total) {
-        this.total = total;
-    }
-
-    public String getMedioDePago() {
-        return medioDePago;
-    }
-
-    public void setMedioDePago(String medioDePago) {
-        this.medioDePago = medioDePago;
-    }
-
-    public Double getDescuento() {
-        return descuento;
-    }
-
-    public void setDescuento(Double descuento) {
-        this.descuento = descuento;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
+    /**
+     * Verifica si los productos disponibles en stock cubren la cantidad solicitada.
+     * @param stockDisponible Map con el id del producto y su stock disponible.
+     * @return true si el stock es suficiente; false en caso contrario.
+     */
+    public boolean validarStockSuficiente(List<Integer> stockDisponible) {
+        for (int i = 0; i < productosVendidos.size(); i++) {
+            if (productosVendidos.get(i).getCantidad() > stockDisponible.get(i)) {
+                return false;
+            }
+        }
+        return true;
     }
 
 
