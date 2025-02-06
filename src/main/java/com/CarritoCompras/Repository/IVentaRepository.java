@@ -10,11 +10,12 @@ import java.util.List;
 
 @Repository
 public interface IVentaRepository extends JpaRepository<VentaEntity, Long> {
-    // Si necesitas agregar métodos personalizados, puedes definirlos aquí
-
-    // Ejemplo de consulta por cliente
+    // Encuentra todas las ventas realizadas por un cliente específico
     List<VentaEntity> findByClienteId(Long clienteId);
 
-    // Ejemplo de consulta por rango de fechas
-    List<VentaEntity> findByFechaHoraBetween(LocalDateTime inicio, LocalDateTime fin);
+    // Encuentra todas las ventas que contienen un carrito específico
+    List<VentaEntity> findByCarritoId(Long carritoId);
+
+    // Encuentra ventas realizadas en una fecha específica (ejemplo básico)
+    List<VentaEntity> findByFechaHoraBetween(LocalDateTime fechaInicio, LocalDateTime fechaFin);
 }

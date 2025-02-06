@@ -2,26 +2,17 @@ package com.CarritoCompras.Service.Interface;
 
 import com.CarritoCompras.Model.DTO.VentaDTO;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IVentaService {
 
-    // Crear una nueva venta
-    VentaDTO saveVenta(VentaDTO ventaDTO);
+    List<VentaDTO> obtenerTodas();
 
-    // Buscar una venta por ID
-    VentaDTO findVentaById(Long id);
+    VentaDTO obtenerPorId(Long id);
 
-    // Obtener todas las ventas
-    List<VentaDTO> findAllVentas();
+    VentaDTO crearVenta(VentaDTO ventaDTO);
 
-    // Buscar ventas por ID de cliente
-    List<VentaDTO> findVentasByClienteId(Long clienteId);
+    VentaDTO actualizarVenta(Long id, VentaDTO ventaDTO);
 
-    // Buscar ventas dentro de un rango de fechas
-    List<VentaDTO> findVentasByFechaBetween(LocalDateTime inicio, LocalDateTime fin);
-
-    // Eliminar una venta por ID
-    void deleteVenta(Long id);
+    void eliminarVenta(Long id);
 }

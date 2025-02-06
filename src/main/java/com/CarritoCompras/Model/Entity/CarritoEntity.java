@@ -3,6 +3,7 @@ package com.CarritoCompras.Model.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,20 +15,38 @@ import java.util.List;
 @Builder
 public class CarritoEntity {
 
-    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "cliente_id", nullable = false, unique = true)
-    private ClienteEntity cliente;
+    @Column(nullable = false)
+    private Long clienteId;
 
-    @ManyToMany
-    @JoinTable(
-            name = "carrito_productos",
-            joinColumns = @JoinColumn(name = "carrito_id"),
-            inverseJoinColumns = @JoinColumn(name = "producto_id")
+    @ElementCollection
+    @CollectionTable(
+            name = "productos_carrito",
+            joinColumns = @JoinColumn(name = "carrito_id")
     )
-    private List<ProductoEntity> productos;
+    @Column(name = "cantidad")
+    private List<ProductoCantidad> productosAgregados = new ArrayList<>();
+
+
+    public void agregarProducto(Long productoId, Integer cantidad) {
+        productosAgregados.add(new ProductoCantidad(productoId, cantidad));
+    }
+
+
+    public void eliminarProducto(Long productoId) {
+        productosAgregados.removeIf(producto -> producto.getProductoId().equals(productoId));
+    }
+
+
+    public void modificarCantidadProducto(Long productoId, Integer nuevaCantidad) {
+        for (ProductoCantidad producto : productosAgregados) {
+            if (producto.getProductoId().equals(productoId)) {
+                producto.setCantidad(nuevaCantidad);
+                break;
+            }
+        }
+    }
 }
 

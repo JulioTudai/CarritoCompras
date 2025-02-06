@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -13,8 +13,12 @@ import java.util.Map;
 public class VentaDTO {
 
     private Long id;
-    private String fechaVenta;
-    private Double total; // Monto total de la venta
-    private List<Long> productoIds; // IDs de los productos vendidos
-    private Map<Long, Integer> cantidades;
+    private Long carritoId;
+    private LocalDateTime fechaHora;
+    private Long clienteId;
+    private Double total;
+    private Double descuento;
+
+    // Productos vendidos con sus cantidades
+    private List<ProductoCantidadDTO> productosVendidos;
 }

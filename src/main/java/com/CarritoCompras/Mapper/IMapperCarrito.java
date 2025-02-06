@@ -2,41 +2,29 @@ package com.CarritoCompras.Mapper;
 
 import com.CarritoCompras.Model.DTO.CarritoDTO;
 import com.CarritoCompras.Model.Entity.CarritoEntity;
-import com.CarritoCompras.Model.Entity.ProductoEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Mapper
 public interface IMapperCarrito {
 
+    // Instancia estática para acceder al mapper generado
     IMapperCarrito INSTANCE = Mappers.getMapper(IMapperCarrito.class);
 
-    // Mapeo de Entity a DTO
-    @Mapping(target = "productos", source = "productos", qualifiedByName = "mapProductosToIds")
-    CarritoDTO toDTO(CarritoEntity carritoEntity);
+    //de CarritoEntity a CarritoDTO
+    @Mapping(source = "productosAgregados", target = "productosAgregados")
+    CarritoDTO carritoEntityToCarritoDTO(CarritoEntity carritoEntity);
 
-    // Mapeo de DTO a Entity
-    @Mapping(target = "productos", source = "productos", qualifiedByName = "mapIdsToProductos")
-    CarritoEntity toEntity(CarritoDTO carritoDTO);
+    //de CarritoDTO a CarritoEntity
+    @Mapping(source = "productosAgregados", target = "productosAgregados")
+    CarritoEntity carritoDTOToCarritoEntity(CarritoDTO carritoDTO);
 
-    //  para convertir lista de ProductoEntity a lista de IDs
-    @Named("mapProductosToIds")
-    default List<Long> mapProductosToIds(List<ProductoEntity> productos) {
-        return productos.stream()
-                .map(ProductoEntity::getId)
-                .collect(Collectors.toList());
-    }
+    //para mapear una lista de CarritoEntity a una lista de CarritoDTO
+    List<CarritoDTO> carritoEntitiesToCarritoDTOs(List<CarritoEntity> carritoEntities);
 
-    // para convertir lista de IDs a lista de ProductoEntity
-    @Named("mapIdsToProductos")
-    default List<ProductoEntity> mapIdsToProductos(List<Long> productoIds) {
-        return productoIds.stream()
-                .map(id -> ProductoEntity.builder().id(id).build())
-                .collect(Collectors.toList());
-    }
+    //para mapear una lista de CarritoDTO a una lista de CarritoEntity
+    List<CarritoEntity> carritoDTOsToCarritoEntities(List<CarritoDTO> carritoDTOs);
 }
