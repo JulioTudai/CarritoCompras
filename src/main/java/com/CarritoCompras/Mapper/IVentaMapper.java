@@ -1,8 +1,6 @@
 package com.CarritoCompras.Mapper;
 
 
-import com.CarritoCompras.Mapper.Helpers.VentaMapperHelper;
-import com.CarritoCompras.Model.DTO.ProductoCantidadDTO;
 import com.CarritoCompras.Model.DTO.VentaDTO;
 import com.CarritoCompras.Model.Entity.ProductoCantidad;
 import com.CarritoCompras.Model.Entity.VentaEntity;

@@ -1,7 +1,6 @@
 package com.CarritoCompras.Service.Implementation;
 
 import com.CarritoCompras.Mapper.IMapperMercado;
-import com.CarritoCompras.Mapper.IMapperProducto;
 import com.CarritoCompras.Mapper.IVentaMapper;
 import com.CarritoCompras.Model.DTO.MercadoDTO;
 import com.CarritoCompras.Model.DTO.ProductoDTO;
@@ -12,7 +11,7 @@ import com.CarritoCompras.Model.Entity.VentaEntity;
 import com.CarritoCompras.Repository.ClienteRepository;
 import com.CarritoCompras.Repository.IVentaRepository;
 import com.CarritoCompras.Repository.MercadoRepository;
-import com.CarritoCompras.Repository.ProductoRepository;
+import com.CarritoCompras.Repository.IProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +25,7 @@ public class MercadoServiceIMP {
     private MercadoRepository mercadoRepository;
 
     @Autowired
-    ProductoRepository productoRepository;
+    IProductoRepository productoRepository;
 
     @Autowired
     ClienteRepository clienteRepository;

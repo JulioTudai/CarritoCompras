@@ -1,97 +1,62 @@
 package com.CarritoCompras.Service.Implementation;
 
-import com.CarritoCompras.Mapper.IMapperProducto;
-import com.CarritoCompras.Model.DTO.ProductoDTO;
-import com.CarritoCompras.Model.DTO.ProductoProveedorDTO;
 import com.CarritoCompras.Model.Entity.ProductoEntity;
-import com.CarritoCompras.Model.Entity.ProveedorEntity;
-import com.CarritoCompras.Repository.IProveedorRepository;
-import com.CarritoCompras.Repository.ProductoRepository;
-import com.CarritoCompras.Service.Interface.IProdutoService;
+import com.CarritoCompras.Repository.IProductoRepository;
+import com.CarritoCompras.Service.Interface.IProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
-public class ProductoServiceIMP implements IProdutoService {
+public class ProductoServiceIMP implements IProductoService {
+
 
     @Autowired
-    private ProductoRepository productoRepository;
-    @Autowired
-    private IProveedorRepository proveedorRepository;
+    IProductoRepository productoRepository;
+
 
     @Override
-    public List<ProductoDTO> findAll(){
-        return this.productoRepository.findAll().stream()
-                .map(productoEntity -> IMapperProducto.INSTANCE.toDTO(productoEntity))
-                .collect(Collectors.toList());
-    }
-
-    public ProductoProveedorDTO findById(Long id){
-
-        ProductoEntity producto = productoRepository.findByIdWithProveedor(id)
-                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
-
-        return IMapperProducto.INSTANCE.toProductoProvedorDTO(producto);
-
-    }
-
-    public List<ProductoDTO> findByName(String name){
-
-        return this.productoRepository.findByNameContainingIgnoreCase(name).stream()
-                .map(IMapperProducto.INSTANCE::toDTO)
-                .collect(Collectors.toList());
+    public ProductoEntity crearProducto(ProductoEntity productoEntity) {
+        return productoRepository.save(productoEntity);
     }
 
 
-
-    public ProductoDTO saveProducto(ProductoDTO productoDTO){
-
-        ProveedorEntity proveedor = proveedorRepository.findById(productoDTO.getProveedorId())
-                .orElseThrow(() -> new IllegalArgumentException("Proveedor no encontrado"));
-
-        ProductoEntity producto = IMapperProducto.INSTANCE.toEntity(productoDTO);
-        producto.setProveedor(proveedor);
-
-        return IMapperProducto.INSTANCE.toDTO(this.productoRepository.save(producto));
+    @Override
+    public Optional<ProductoEntity> obtenerProductoPorId(Long id) {
+        return productoRepository.findById(id);
     }
 
-    public ProductoDTO updateProducto(Long id, ProductoDTO productoDTO){
 
-        ProductoEntity producto = productoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
-
-        producto.setName(productoDTO.getName());
-        producto.setPrice(productoDTO.getPrice());
-        producto.setDescription(productoDTO.getDescription());
-        producto.setStock(productoDTO.getStock());
-
-        if (productoDTO.getProveedorId() != null) {
-
-            ProveedorEntity proveedor = proveedorRepository.findById(productoDTO.getProveedorId())
-                    .orElseThrow(() -> new IllegalArgumentException("Proveedor no encontrado"));
-
-            producto.setProveedor(proveedor);
-        }
-
-        return IMapperProducto.INSTANCE.toDTO( this.productoRepository.save(producto));
-
+    @Override
+    public List<ProductoEntity> listarProductos() {
+        return productoRepository.findAll();
     }
 
-    public String deletProducto (Long id){
 
-        if(productoRepository.existsById(id)){
-            this.productoRepository.deleteById(id);
-            return "El producto con el id: "+ id + "ah sido eliminado";
-        }
-        else {
-            throw new IllegalArgumentException("El prudcto con el id: "+id+" No existe");
-        }
-
+    @Override
+    public Optional<ProductoEntity> actualizarProducto(Long id, ProductoEntity productoEntity) {
+        return productoRepository.findById(id)
+                .map(productoExistente -> {
+                    // Actualizamos los campos necesarios
+                    productoExistente.setNombre(productoEntity.getNombre());
+                    productoExistente.setPrecio(productoEntity.getPrecio());
+                    productoExistente.setStock(productoEntity.getStock());
+                    productoExistente.setProveedorId(productoEntity.getProveedorId());
+                    return productoRepository.save(productoExistente);
+                });
     }
 
+
+    @Override
+    public boolean eliminarProducto(Long id) {
+        return productoRepository.findById(id)
+                .map(productoExistente -> {
+                    productoRepository.delete(productoExistente);
+                    return true;
+                }).orElse(false);
+    }
 
 }
 

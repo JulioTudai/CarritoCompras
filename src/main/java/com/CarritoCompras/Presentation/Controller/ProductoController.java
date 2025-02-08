@@ -1,8 +1,8 @@
 package com.CarritoCompras.Presentation.Controller;
 
+import com.CarritoCompras.Mapper.IMapperProducto;
 import com.CarritoCompras.Model.DTO.ProductoDTO;
-import com.CarritoCompras.Model.DTO.ProductoProveedorDTO;
-import com.CarritoCompras.Service.Interface.IProdutoService;
+import com.CarritoCompras.Service.Interface.IProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,56 +16,50 @@ import java.util.List;
 public class ProductoController {
 
     @Autowired
-    private IProdutoService produtoService;
+    IProductoService productoService;
+    @Autowired
+    IMapperProducto productoMapper;
 
-    @GetMapping("/find")
-    public ResponseEntity<List<ProductoDTO>> findAll(){
-        return  new ResponseEntity<>(this.produtoService.findAll(), HttpStatus.OK);
+    @PostMapping
+    public ResponseEntity<ProductoDTO> crearProducto(@RequestBody ProductoDTO productoDTO) {
+        var productoEntity = productoMapper.productoDTOToProductoEntity(productoDTO);
+        var productoCreado = productoService.crearProducto(productoEntity);
+        return new ResponseEntity<>(productoMapper.productoEntityToProductoDTO(productoCreado), HttpStatus.CREATED);
     }
 
-    @GetMapping("/find/{id}")
-    public ResponseEntity<ProductoProveedorDTO> findById(@PathVariable Long id){
-
-        return new ResponseEntity<>(this.produtoService.findById(id),HttpStatus.OK);
-
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductoDTO> obtenerProductoPorId(@PathVariable Long id) {
+        var productoEntity = productoService.obtenerProductoPorId(id);
+        return productoEntity != null
+                ? new ResponseEntity<>(productoMapper.productoEntityToProductoDTO(productoEntity), HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/buscar")
-    public ResponseEntity<List<ProductoDTO>> findByName(@RequestParam("name") String name){
-        return new ResponseEntity<>(this.produtoService.findByName(name),HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<List<ProductoDTO>> listarProductos() {
+        var productos = productoService.listarProductos();
+        var productosDTO = productos.stream()
+                .map(productoMapper::productoEntityToProductoDTO)
+                .toList();
+        return new ResponseEntity<>(productosDTO, HttpStatus.OK);
     }
 
-
-    @PostMapping("/create")
-    public ResponseEntity<ProductoDTO> saveProducto(@RequestBody ProductoDTO productoDTO){
-
-        return new ResponseEntity<>(this.produtoService.saveProducto(productoDTO),HttpStatus.CREATED);
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductoDTO> actualizarProducto(
+            @PathVariable Long id,
+            @RequestBody ProductoDTO productoDTO) {
+        var productoActualizado = productoService.actualizarProducto(id, productoMapper.productoDTOToProductoEntity(productoDTO));
+        return productoActualizado != null
+                ? new ResponseEntity<>(productoMapper.productoEntityToProductoDTO(productoActualizado), HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<ProductoDTO> updateProducto(@PathVariable Long id,@RequestBody ProductoDTO productoDTO){
-
-        return new ResponseEntity<>(this.produtoService.updateProducto(id,productoDTO),HttpStatus.CREATED);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> eliminarProducto(@PathVariable Long id) {
+        if (!productoService.eliminarProducto(id)) {
+            throw new ResourceNotFoundException("No se pudo eliminar. Producto no encontrado con ID: " + id);
+        }
+        return new ResponseEntity<>("Producto eliminado exitosamente", HttpStatus.NO_CONTENT);
     }
-
-    @DeleteMapping("/delet/{id}")
-    public ResponseEntity<String> deletProducto(@PathVariable Long id){
-
-        return new ResponseEntity<>(this.produtoService.deletProducto(id),HttpStatus.NO_CONTENT);
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

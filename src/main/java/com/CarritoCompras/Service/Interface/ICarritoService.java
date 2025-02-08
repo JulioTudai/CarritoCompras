@@ -5,6 +5,7 @@ import com.CarritoCompras.Model.DTO.CarritoDTO;
 public interface ICarritoService {
 
 
+
     // Obtener el carrito de un cliente por su ID
     CarritoDTO obtenerCarritoPorClienteId(Long clienteId);
 
