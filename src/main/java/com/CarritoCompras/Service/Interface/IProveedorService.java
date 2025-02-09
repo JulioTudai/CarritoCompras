@@ -1,20 +1,21 @@
 package com.CarritoCompras.Service.Interface;
 
 
-import com.CarritoCompras.Model.DTO.ProveedorDTO;
+import com.CarritoCompras.Model.Entity.ProveedorEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IProveedorService {
 
-    List<ProveedorDTO> findAll();
+    ProveedorEntity crearProveedor(ProveedorEntity proveedorEntity);
 
-    ProveedorDTO findById(Long id);
+    Optional<ProveedorEntity> obtenerProveedorPorId(Long id);
 
-    ProveedorDTO saveProveedor(ProveedorDTO proveedorDTO);
+    List<ProveedorEntity> listarProveedores();
 
-    ProveedorDTO updateProveedor(Long id, ProveedorDTO proveedorDTO);
+    Optional<ProveedorEntity> actualizarProveedor(Long id, ProveedorEntity proveedorEntity);
 
-    String deletProveedor(Long id);
+    boolean eliminarProveedor(Long id);
 
 }

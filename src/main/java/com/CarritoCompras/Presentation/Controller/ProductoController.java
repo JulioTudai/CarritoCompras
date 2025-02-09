@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class ProductoController {
     public ResponseEntity<ProductoDTO> obtenerProductoPorId(@PathVariable Long id) {
         var productoEntity = productoService.obtenerProductoPorId(id);
         return productoEntity != null
-                ? new ResponseEntity<>(productoMapper.productoEntityToProductoDTO(productoEntity), HttpStatus.OK)
+                ? new ResponseEntity<>(productoMapper.productoEntityToProductoDTO(productoEntity.get()), HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
@@ -50,14 +51,14 @@ public class ProductoController {
             @RequestBody ProductoDTO productoDTO) {
         var productoActualizado = productoService.actualizarProducto(id, productoMapper.productoDTOToProductoEntity(productoDTO));
         return productoActualizado != null
-                ? new ResponseEntity<>(productoMapper.productoEntityToProductoDTO(productoActualizado), HttpStatus.OK)
+                ? new ResponseEntity<>(productoMapper.productoEntityToProductoDTO(productoActualizado.get()), HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminarProducto(@PathVariable Long id) {
         if (!productoService.eliminarProducto(id)) {
-            throw new ResourceNotFoundException("No se pudo eliminar. Producto no encontrado con ID: " + id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se pudo eliminar. Producto no encontrado con ID: " + id);
         }
         return new ResponseEntity<>("Producto eliminado exitosamente", HttpStatus.NO_CONTENT);
     }

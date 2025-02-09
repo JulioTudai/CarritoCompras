@@ -1,108 +1,51 @@
 package com.CarritoCompras.Service.Implementation;
 
-import com.CarritoCompras.Mapper.IMapperMercado;
-import com.CarritoCompras.Mapper.IVentaMapper;
-import com.CarritoCompras.Model.DTO.MercadoDTO;
-import com.CarritoCompras.Model.DTO.ProductoDTO;
-import com.CarritoCompras.Model.DTO.VentaDTO;
 import com.CarritoCompras.Model.Entity.MercadoEntity;
-import com.CarritoCompras.Model.Entity.ProductoEntity;
-import com.CarritoCompras.Model.Entity.VentaEntity;
-import com.CarritoCompras.Repository.ClienteRepository;
-import com.CarritoCompras.Repository.IVentaRepository;
-import com.CarritoCompras.Repository.MercadoRepository;
-import com.CarritoCompras.Repository.IProductoRepository;
+import com.CarritoCompras.Repository.IMercadoRepository;
+import com.CarritoCompras.Service.Interface.IMercadoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
-public class MercadoServiceIMP {
-    @Autowired
-    private MercadoRepository mercadoRepository;
+public class MercadoServiceIMP implements IMercadoService {
 
     @Autowired
-    IProductoRepository productoRepository;
+    IMercadoRepository mercadoRepository;
 
-    @Autowired
-    ClienteRepository clienteRepository;
-
-    @Autowired
-    IVentaRepository ventaRepository;
-
-    @Autowired
-    private IVentaMapper ventaMapper;
-
-    public MercadoDTO findMercadoById(Long id){
-        MercadoEntity mercado = mercadoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Mercado no encontrado"));
-
-        return IMapperMercado.INSTANCE.toDTO(mercado);
-
+    @Override
+    public MercadoEntity crearMercado(MercadoEntity mercadoEntity) {
+        return mercadoRepository.save(mercadoEntity);
     }
 
-    // Registrar compra
-    public void registrarVenta(Long mercadoId, VentaDTO ventaDTO) {
-        // Validar mercado existente
-        MercadoEntity mercado = mercadoRepository.findById(mercadoId)
-                .orElseThrow(() -> new IllegalArgumentException("Mercado no encontrado"));
+    @Override
+    public Optional<MercadoEntity> obtenerMercadoPorId(Long id) {
+        return mercadoRepository.findById(id);
+    }
 
-        // Convertir VentaDTO a VentaEntity
-        VentaEntity ventaEntity = ventaMapper.toEntity(ventaDTO);
+    @Override
+    public List<MercadoEntity> listarMercados() {
+        return mercadoRepository.findAll();
+    }
 
-        // Validar cliente
-        clienteRepository.findById(ventaDTO.getClienteId())
-                .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado con ID: " + ventaDTO.getClienteId()));
-
-        // Validar productos y stock
-        ventaDTO.getCantidadPorProducto().forEach((productoId, cantidad) -> {
-            ProductoEntity producto = productoRepository.findById(productoId)
-                    .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado con ID: " + productoId));
-            if (producto.getStock() < cantidad) {
-                throw new IllegalArgumentException("Stock insuficiente para el producto: " + producto.getName());
-            }
-            producto.setStock(producto.getStock() - cantidad);
-            productoRepository.save(producto);
+    @Override
+    public Optional<MercadoEntity> actualizarMercado(Long id, MercadoEntity mercadoEntity) {
+        return mercadoRepository.findById(id).map(existing -> {
+            existing.setNombre(mercadoEntity.getNombre());
+            existing.setVentas(mercadoEntity.getVentas());
+            existing.setClientesId(mercadoEntity.getClientesId());
+            existing.setInventario(mercadoEntity.getInventario());
+            return mercadoRepository.save(existing);
         });
-
-        // Asignar el mercado a la venta y calcular total
-        ventaEntity.setFechaHora(LocalDateTime.now());
-        ventaEntity.calcularTotal();
-
-        // Guardar la venta
-        ventaRepository.save(ventaEntity);
     }
 
-    // Consultar stock
-    public List<ProductoDTO> consultarStock(Long mercadoId) {
-        MercadoEntity mercado = mercadoRepository.findById(mercadoId)
-                .orElseThrow(() -> new IllegalArgumentException("Mercado no encontrado"));
-        return mercado.getProductos().keySet().stream()
-                .map(productoEntity -> IMapperProducto.INSTANCE.toDTO(productoEntity))
-                .collect(Collectors.toList());
-    }
-
-    // Agregar producto al inventario
-    public void agregarProducto(Long mercadoId, ProductoDTO productoDTO) {
-        MercadoEntity mercado = mercadoRepository.findById(mercadoId)
-                .orElseThrow(() -> new IllegalArgumentException("Mercado no encontrado"));
-        // Lógica de agregar producto en inventario pendiente
-    }
-
-    // Consultar ventas
-    public List<VentaEntity> consultarVentas(Long mercadoId) {
-        MercadoEntity mercado = mercadoRepository.findById(mercadoId)
-                .orElseThrow(() -> new IllegalArgumentException("Mercado no encontrado"));
-        return mercado.getVentas();
-    }
-
-    // Generar reporte de ingresos
-    public Double generarReporteIngresos(Long mercadoId) {
-        MercadoEntity mercado = mercadoRepository.findById(mercadoId)
-                .orElseThrow(() -> new IllegalArgumentException("Mercado no encontrado"));
-        return mercado.getIngresosTotales();
+    @Override
+    public boolean eliminarMercado(Long id) {
+        return mercadoRepository.findById(id).map(existing -> {
+            mercadoRepository.delete(existing);
+            return true;
+        }).orElse(false);
     }
 }

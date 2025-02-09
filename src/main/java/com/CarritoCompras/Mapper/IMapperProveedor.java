@@ -2,18 +2,15 @@ package com.CarritoCompras.Mapper;
 
 import com.CarritoCompras.Model.DTO.ProveedorDTO;
 import com.CarritoCompras.Model.Entity.ProveedorEntity;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(uses = {IMapperProducto.class})
+@Mapper(componentModel = "spring")
 public interface IMapperProveedor {
 
     IMapperProveedor INSTANCE = Mappers.getMapper(IMapperProveedor.class);
 
-    @Mapping(target = "id", ignore = true)
-    ProveedorEntity toEntity(ProveedorDTO dto);
-
-
-    ProveedorDTO toDTO(ProveedorEntity entity);
+    ProveedorDTO toDTO(ProveedorEntity proveedorEntity);
+    ProveedorEntity toEntity(ProveedorDTO proveedorDTO);
 
 }

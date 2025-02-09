@@ -9,5 +9,6 @@ import java.util.Optional;
 @Repository
 public interface IProveedorRepository extends JpaRepository<ProveedorEntity,Long> {
 
-    Optional<ProveedorEntity> findByName(String name);
+    Optional<ProveedorEntity> findByEmail(String email);
+    boolean existsByEmail(String email);
 }

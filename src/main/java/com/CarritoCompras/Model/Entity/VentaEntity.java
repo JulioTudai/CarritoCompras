@@ -43,10 +43,7 @@ public class VentaEntity {
     @Column(name = "cantidad") // Define la columna que almacena la cantidad
     private List<ProductoCantidad> productosVendidos;
 
-    /**
-     * Calcula el total de la venta sumando los precios de los productos.
-     * @param preciosProductos Lista de precios por producto en el orden correspondiente.
-     */
+
     public void calcularTotal(List<Double> preciosProductos) {
         if (productosVendidos == null || productosVendidos.isEmpty()) {
             this.total = 0.0;
@@ -62,10 +59,7 @@ public class VentaEntity {
         this.total = sumaTotal;
     }
 
-    /**
-     * Aplica un descuento sobre el total actual.
-     * @param porcentajeDescuento Porcentaje del descuento a aplicar.
-     */
+
     public void aplicarDescuento(double porcentajeDescuento) {
         if (total != null && total > 0 && porcentajeDescuento > 0) {
             this.descuento = total * (porcentajeDescuento / 100);
@@ -75,11 +69,6 @@ public class VentaEntity {
         }
     }
 
-    /**
-     * Verifica si los productos disponibles en stock cubren la cantidad solicitada.
-     * @param stockDisponible Map con el id del producto y su stock disponible.
-     * @return true si el stock es suficiente; false en caso contrario.
-     */
     public boolean validarStockSuficiente(List<Integer> stockDisponible) {
         for (int i = 0; i < productosVendidos.size(); i++) {
             if (productosVendidos.get(i).getCantidad() > stockDisponible.get(i)) {

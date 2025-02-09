@@ -1,6 +1,7 @@
 package com.CarritoCompras.Mapper;
 
 
+import com.CarritoCompras.Model.DTO.ProductoCantidadDTO;
 import com.CarritoCompras.Model.DTO.VentaDTO;
 import com.CarritoCompras.Model.Entity.ProductoCantidad;
 import com.CarritoCompras.Model.Entity.VentaEntity;
@@ -10,7 +11,7 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = VentaMapperHelper.class)
+@Mapper(componentModel = "spring")
 public interface IVentaMapper {
 
     IVentaMapper INSTANCE = Mappers.getMapper(IVentaMapper.class);

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
-import java.util.Map;
+
 @Entity
 @Table(name ="mercado")
 @NoArgsConstructor
@@ -18,22 +18,21 @@ public class MercadoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String nombre;
 
     @ElementCollection
-    @CollectionTable(name = "mercado_productos", joinColumns = @JoinColumn(name = "mercado_id"))
-    @MapKeyJoinColumn(name = "producto_id")
-    @Column(name = "stock")
-    private Map<ProductoEntity, Integer> productos;
+    @CollectionTable(name = "mercado_ventas", joinColumns = @JoinColumn(name = "mercado_id"))
+    @Column(name = "venta_id")
+    private List<Long> ventas;
 
-    @OneToMany(mappedBy = "mercado", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<VentaEntity> ventas;
+    @ElementCollection
+    @CollectionTable(name = "mercado_clientes", joinColumns = @JoinColumn(name = "mercado_id"))
+    @Column(name = "cliente_id")
+    private List<Long> clientesId;
 
-    @OneToMany(mappedBy = "mercado", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ClienteEntity> clientes;
-
-    @Column(nullable = false)
-    private Double ingresosTotales = 0.0;
+    @ElementCollection
+    @CollectionTable(name = "mercado_inventario", joinColumns = @JoinColumn(name = "mercado_id"))
+    private List<ProductoCantidad> inventario;
 
 }
